@@ -2,55 +2,43 @@
 // STATIC DOM REFERENCES
 const submitButton = document.getElementById("submit");
 const form = document.getElementById("main-form");
-const inputs = form.getElementsByTagName("input");
-const savedDataContainer = document.getElementById("saved");
+const formInputElements = form.getElementsByTagName("input");
+const savedDataContainer = document.getElementsByTagName("tbody")[0];
 
 // GLOBALS
 let dataIdCounter = 0;
 let editingId = undefined;
 let savedData = {};
 
-function onSubmit() {
-    let data = {};
-    for(let i = 0; i < inputs.length - 1; i++) {
-        let label = inputs[i].name;
-        let value = inputs[i].value;
-
-        data[label] = value;
-    }
-    savedData[dataIdCounter] = data;
-    dataIdCounter++;
-
-    renderSavedData(savedData);
-}
-
 function renderSavedData(savedData) {
     clearChildNodes(savedDataContainer);
-
-    let dataContainer = document.createElement("div");
     let ids = Object.keys(savedData);
 
     ids.forEach((id) => {
+        const dataRow = document.createElement("tr");
         const data = savedData[id];
         const keys = Object.keys(data);
         const isEditing = String(editingId) === id;
 
         const dataId = document.createElement("p");
+        const dataTd = document.createElement("td");
 
         dataId.innerText = id;
         dataId.className = "id";
-        dataContainer.appendChild(dataId);
+
+        dataTd.appendChild(dataId);
+        dataRow.appendChild(dataTd);
 
         keys.forEach((key) => {
-            const label = document.createElement("p");
-
             let value;
+
+            const td = document.createElement("td");
 
             if (isEditing) {
                 value = document.createElement("input");
                 value.name = key;
 
-                if (key === "first" || key === "last"){
+                if (key === "first" || key === "last") {
                     value.type = "text";
                 } else {
                     value.type = "date";
@@ -61,36 +49,54 @@ function renderSavedData(savedData) {
                 value = document.createElement("p");
             }
 
-            label.innerText = key;
-            label.className = "label";
-            dataContainer.appendChild(label);
 
             value.innerText = data[key];
-            label.className = "value";
-            dataContainer.appendChild(value);
+
+            td.appendChild(value);
+            dataRow.appendChild(td);
         });
 
         const editButton = document.createElement("button");
         const deleteButton = document.createElement("button");
 
+
+        const editTd = document.createElement("td");
+        const deleteTd = document.createElement("td");
+
         if (isEditing) {
-            const updateInputs = dataContainer.getElementsByTagName("input");
+            const updateInputs = dataRow.getElementsByTagName("input");
 
             editButton.innerText = "save";
             editButton.onclick = () => updateData(id, updateInputs);
-            dataContainer.appendChild(editButton);
         } else {
             editButton.innerText = "edit";
             editButton.onclick = () => editData(id);
-            dataContainer.appendChild(editButton);
         }
+
+        editTd.appendChild(editButton);
+        dataRow.appendChild(editTd);
 
         deleteButton.innerText = "delete";
         deleteButton.onclick = () => deleteData(id);
-        dataContainer.appendChild(deleteButton);
+        deleteTd.appendChild(deleteButton)
+        dataRow.appendChild(deleteTd);
+
+        savedDataContainer.appendChild(dataRow);
     });
 
-    savedDataContainer.appendChild(dataContainer);
+}
+
+function onSubmit() {
+    let data = getData(formInputElements, formInputElements.length - 1);
+
+    if (isDataValid(data)) {
+        savedData[dataIdCounter] = data;
+        dataIdCounter++;
+
+        renderSavedData(savedData);
+    } else {
+        alert("invalid data");
+    }
 }
 
 function editData(id) {
@@ -98,19 +104,18 @@ function editData(id) {
     renderSavedData(savedData);
 }
 
-function updateData(id, inputs) {
+function updateData(id, inputElements) {
     editingId = undefined;
 
-    let updatedData = {};
-    for(let i = 0; i < inputs.length; i++) {
-        let label = inputs[i].name;
-        let value = inputs[i].value;
+    let updatedData = getData(inputElements, inputElements.length);
 
-        updatedData[label] = value;
+    if (isDataValid(updatedData)) {
+        savedData[id] = updatedData;
+        renderSavedData(savedData);
+    } else {
+        alert("invalid data");
     }
 
-    savedData[id] = updatedData;
-    renderSavedData(savedData);
 }
 
 function deleteData(id) {
@@ -118,10 +123,33 @@ function deleteData(id) {
     renderSavedData(savedData);
 }
 
+// helpers
 function clearChildNodes(parent) {
-    while(parent.firstChild){
-        parent.removeChild(parent.firstChild);
+    while (parent.children.length > 1) {
+        parent.removeChild(parent.lastChild);
     }
+}
+
+function getData(inputElements, len) {
+    let data = {};
+    for (let i = 0; i < len; i++) {
+        let label = inputElements[i].name;
+        let value = inputElements[i].value;
+
+        data[label] = value;
+    }
+
+    return data;
+}
+
+function isDataValid(data) {
+    const keys = Object.keys(data);
+
+    return !keys.some((key) => {
+        if (data[key].length === 0 || data.dob >= data.doj) {
+            return true;
+        }
+    })
 }
 
 submitButton.onclick = onSubmit;

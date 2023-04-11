@@ -1,0 +1,25 @@
+#saved {
+  display: flex;
+  flex-direction: column;
+}
+
+#saved > div {
+  display: flex;
+}
+
+#saved > div > p {
+  margin: 0 1rem;
+}
+
+.id {
+  color: red;
+}
+
+th,
+tr {
+  min-width: 10ch;
+}
+
+td {
+    text-align: center;
+}

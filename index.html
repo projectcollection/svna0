@@ -1,33 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <title>svna0</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link href="style.css" rel="stylesheet">
-    </head>
-    <body>
-        <h1>personal details</h1>
-        <form id="main-form">
-            <label for="first">first name</label>
-            <input type="text" name="first" value="">
 
-            <label for="last">last name</label>
-            <input type="text" name="last" value="">
+<head>
+    <title>svna0</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="style.css" rel="stylesheet">
+</head>
 
-            <label for="dob">dob</label>
-            <input type="date" name="dob" value="">
+<body>
+    <h1>personal details</h1>
+    <form id="main-form">
+        <label for="first">first name</label>
+        <input type="text" name="first" value="">
 
-            <label for="doj">doj</label>
-            <input type="date" name="doj" value="">
+        <label for="last">last name</label>
+        <input type="text" name="last" value="">
 
-            <input type="button" name="submit" value="submit" id="submit">
-        </form>
+        <label for="dob">dob</label>
+        <input type="date" name="dob" value="">
 
-        <h2>saved data</h2>
-        <div id="saved">
+        <label for="doj">doj</label>
+        <input type="date" name="doj" value="">
 
-        </div>
-        <script src="index.js"></script>
-    </body>
+        <input type="button" name="submit" value="submit" id="submit">
+    </form>
+
+    <h2>saved data</h2>
+    <table id="saved">
+        <tbody>
+            <tr>
+                <th>id</th>
+                <th>first</th>
+                <th>last</th>
+                <th>dob</th>
+                <th>doj</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </tbody>
+    </table>
+    <script src="index.js"></script>
+</body>
+
 </html>
