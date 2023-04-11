@@ -21,18 +21,12 @@ function renderSavedData(savedData) {
         const isEditing = String(editingId) === id;
 
         const dataId = document.createElement("p");
-        const dataTd = document.createElement("td");
-
         dataId.innerText = id;
         dataId.className = "id";
-
-        dataTd.appendChild(dataId);
-        dataRow.appendChild(dataTd);
+        addTd(dataId, dataRow);
 
         keys.forEach((key) => {
             let value;
-
-            const td = document.createElement("td");
 
             if (isEditing) {
                 value = document.createElement("input");
@@ -49,19 +43,12 @@ function renderSavedData(savedData) {
                 value = document.createElement("p");
             }
 
-
             value.innerText = data[key];
-
-            td.appendChild(value);
-            dataRow.appendChild(td);
+            addTd(value, dataRow);
         });
 
         const editButton = document.createElement("button");
         const deleteButton = document.createElement("button");
-
-
-        const editTd = document.createElement("td");
-        const deleteTd = document.createElement("td");
 
         if (isEditing) {
             const updateInputs = dataRow.getElementsByTagName("input");
@@ -72,14 +59,11 @@ function renderSavedData(savedData) {
             editButton.innerText = "edit";
             editButton.onclick = () => editData(id);
         }
-
-        editTd.appendChild(editButton);
-        dataRow.appendChild(editTd);
+        addTd(editButton, dataRow);
 
         deleteButton.innerText = "delete";
         deleteButton.onclick = () => deleteData(id);
-        deleteTd.appendChild(deleteButton)
-        dataRow.appendChild(deleteTd);
+        addTd(deleteButton, dataRow);
 
         savedDataContainer.appendChild(dataRow);
     });
@@ -150,6 +134,13 @@ function isDataValid(data) {
             return true;
         }
     })
+}
+
+function addTd(dataElement, row) {
+    const td = document.createElement("td");
+
+    td.appendChild(dataElement);
+    row.appendChild(td);
 }
 
 submitButton.onclick = onSubmit;
