@@ -6,9 +6,15 @@ const formInputElements = form.getElementsByTagName("input");
 const savedDataContainer = document.getElementsByTagName("tbody")[0];
 
 // GLOBALS
+const localStorageData = localStorage.getItem("svna0");
+
 let dataIdCounter = 0;
 let editingId = undefined;
-let savedData = {};
+let savedData = localStorageData ? JSON.parse(localStorageData) : {};
+
+if (localStorageData) {
+    renderSavedData(savedData);
+}
 
 function renderSavedData(savedData) {
     clearChildNodes(savedDataContainer);
@@ -70,6 +76,11 @@ function renderSavedData(savedData) {
 
 }
 
+function update(data) {
+    localStorage.setItem("svna0", JSON.stringify(data));
+    renderSavedData(data);
+}
+
 function onSubmit() {
     let data = getData(formInputElements, formInputElements.length - 1);
 
@@ -77,7 +88,7 @@ function onSubmit() {
         savedData[dataIdCounter] = data;
         dataIdCounter++;
 
-        renderSavedData(savedData);
+        update(savedData);
     } else {
         alert("invalid data");
     }
@@ -85,7 +96,7 @@ function onSubmit() {
 
 function editData(id) {
     editingId = id;
-    renderSavedData(savedData);
+    update(savedData);
 }
 
 function updateData(id, inputElements) {
@@ -95,16 +106,15 @@ function updateData(id, inputElements) {
 
     if (isDataValid(updatedData)) {
         savedData[id] = updatedData;
-        renderSavedData(savedData);
+        update(savedData);
     } else {
         alert("invalid data");
     }
-
 }
 
 function deleteData(id) {
     delete savedData[id];
-    renderSavedData(savedData);
+    update(savedData);
 }
 
 // helpers
