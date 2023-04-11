@@ -7,8 +7,9 @@ const savedDataContainer = document.getElementsByTagName("tbody")[0];
 
 // GLOBALS
 const localStorageData = localStorage.getItem("svna0");
+const localIdCounter = localStorage.getItem("svna0IdCounter");
 
-let dataIdCounter = 0;
+let dataIdCounter = localIdCounter ? parseInt(localIdCounter) : 0;
 let editingId = undefined;
 let savedData = localStorageData ? JSON.parse(localStorageData) : {};
 
@@ -82,6 +83,7 @@ function renderSavedData(savedData) {
 
 function update(data) {
     localStorage.setItem("svna0", JSON.stringify(data));
+    localStorage.setItem("svna0IdCounter", JSON.stringify(dataIdCounter));
     renderSavedData(data);
 }
 
