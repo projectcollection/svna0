@@ -26,10 +26,12 @@ function renderSavedData(savedData) {
         const keys = Object.keys(data);
         const isEditing = String(editingId) === id;
 
+        let dataElements = [];
+
         const dataId = document.createElement("p");
         dataId.innerText = id;
         dataId.className = "id";
-        addTd(dataId, dataRow);
+        dataElements.push(dataId);
 
         keys.forEach((key) => {
             let value;
@@ -50,7 +52,7 @@ function renderSavedData(savedData) {
             }
 
             value.innerText = data[key];
-            addTd(value, dataRow);
+            dataElements.push(value);
         });
 
         const editButton = document.createElement("button");
@@ -65,11 +67,13 @@ function renderSavedData(savedData) {
             editButton.innerText = "edit";
             editButton.onclick = () => editData(id);
         }
-        addTd(editButton, dataRow);
+        dataElements.push(editButton);
 
         deleteButton.innerText = "delete";
         deleteButton.onclick = () => deleteData(id);
-        addTd(deleteButton, dataRow);
+        dataElements.push(deleteButton);
+
+        addTd(dataElements, dataRow);
 
         savedDataContainer.appendChild(dataRow);
     });
@@ -146,11 +150,12 @@ function isDataValid(data) {
     })
 }
 
-function addTd(dataElement, row) {
-    const td = document.createElement("td");
-
-    td.appendChild(dataElement);
-    row.appendChild(td);
+function addTd(dataElements, row) {
+    dataElements.forEach((dataElement) => {
+        const td = document.createElement("td");
+        td.appendChild(dataElement);
+        row.appendChild(td);
+    })
 }
 
 submitButton.onclick = onSubmit;
