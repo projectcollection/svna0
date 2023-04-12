@@ -146,10 +146,27 @@ function isDataValid(data) {
     const keys = Object.keys(data);
 
     return !keys.some((key) => {
-        if (data[key].length === 0 || data.dob >= data.doj) {
-            return true;
-        }
+        return data[key].length === 0 ||
+            !isValidName(data.first) ||
+            !isValidName(data.last) ||
+            !isValidAge(data.dob, data.doj);
     })
+}
+
+function isValidName(val) {
+    //should be regex tbh
+    const invalidChars = ["0","1","2","3","4","5","6","7","8","9"," "];
+    return !val.split('').some((char) => {
+        return invalidChars.includes(char);
+    });
+}
+
+function isValidAge(dob, doj) {
+    const validAge = 1000 * 60 * 60 * 24 * 365 * 18; // 18 years
+    dob = new Date(dob).getTime();
+    doj = new Date(doj).getTime();
+
+    return doj - dob > validAge;
 }
 
 function addTd(dataElements, row) {
